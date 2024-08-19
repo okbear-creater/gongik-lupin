@@ -1,94 +1,34 @@
-import Image from "next/image";
+'use client';
+
+import { useRouter } from 'next/navigation';
 import styles from "./page.module.css";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleStartClick = () => {
+    router.push('/chat');
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
+      <video autoPlay muted loop className={styles.backgroundVideo}>
+        <source src="/bg_vid.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div className={styles.overlay}></div>
+      <div className={styles.textContainer}>
+        <p className={`${styles.intro} ${styles.animateBottom}`}>나의 병역 신체검사 결과를 예측하는 AI</p>
+        <h1 className={`${styles.title} ${styles.animateBottom}`}>공익루팡AI</h1>
+        <p className={`${styles.description} ${styles.animateBottom}`}>
+        내가 겪었던 증상이나 건강 상태를 입력하고, 최신 병역 기준을 반영한 AI로 나의 공익 여부를 판단해봐요.
         </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button 
+          className={`${styles.startButton} ${styles.animateBottom}`}
+          onClick={handleStartClick}
         >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+          판정 시작
+        </button>
       </div>
     </main>
   );

@@ -1,0 +1,477 @@
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    margin: 0 auto;
+    background-color: rgb(24, 24, 26);
+    color: #ffffff;
+  }
+  
+  .chatHeader {
+    padding: 0.5rem 1rem;
+    background-color: rgb(0, 0, 0);
+    border-bottom: 1px solid rgb(39, 39, 42);
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .chatTitle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #DCDDDD;
+    margin: 0;
+  }
+  
+  .infoBoxContainer {
+    padding: 1rem;
+    width: 100%;
+    max-width: 668px;
+    margin: 1rem auto 0;
+    box-sizing: border-box;
+  }
+  
+  .infoBox {
+    background-color: rgb(0, 0, 0);
+    border: 1px solid rgb(39, 39, 42);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .infoBoxTitle {
+    font-size: 18px;
+    line-height: 28px;
+    color: #ffffff;
+    margin: 0 0 1rem 0;
+    font-weight: normal;
+  }
+  
+  .infoBoxContent {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgb(161, 161, 170);
+    margin: 0;
+  }
+  
+  .infoBoxContent br {
+    content: "";
+    display: block;
+    margin-bottom: 0.5em;
+  }
+  
+  .chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .messageWrapper {
+    width: 100%;
+    max-width: 660px;
+    padding: 1rem 1rem;
+    box-sizing: border-box;
+    position: relative;
+    border-top: 1px solid rgb(39, 39, 42);
+  }
+  
+  .messageWrapper:first-child {
+    border-top: none;
+  }
+  
+  .messageInner {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .message {
+    line-height: 1.5;
+    width: 100%;
+    text-align: left;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .user {
+    color: #dcddde;
+  }
+  
+  .assistant {
+    color: rgb(220, 221, 222);
+  }
+  
+  .messageContent {
+    word-wrap: break-word;
+  }
+  
+  .messageContent h1, .messageContent h2, .messageContent h3 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+  }
+  
+  .messageContent p {
+    margin-bottom: 1em;
+  }
+  
+  .messageContent a {
+    color: #0000FF;
+    text-decoration: underline;
+  }
+  
+  .messageContent ul, .messageContent ol {
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+  }
+  
+  .messageContent li {
+    margin-bottom: 0.5em;
+  }
+  
+  .userIcon, .aiIcon {
+    position: absolute;
+    left: -2rem;
+    top: 1.9rem;
+    color: #dcddde;
+    transform: scale(0.75);
+    transform-origin: center;
+  }
+  
+  .exampleContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    padding: 0rem;
+    width: 100%;
+    max-width: 634px;
+    margin: 1rem auto;
+    box-sizing: border-box;
+  }
+  
+  .exampleButton {
+    background-color: rgb(0, 0, 0);
+    border: 1px solid rgb(39, 39, 42);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 1rem;
+    width: 100%;
+    height: 80px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .exampleButton:hover {
+    background-color: rgba(55, 55, 58, 0.5);
+  }
+  
+  .category {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .example {
+    color: rgb(82, 82, 91);
+    font-size: 14px;
+  }
+  
+  .inputWrapper {
+    background-color: rgb(24, 24, 26);
+    padding: 0;
+    margin-top: auto;
+  }
+  
+  .inputContainer {
+    background-color: rgb(0, 0, 0);
+    padding: 1rem 1rem 0.75rem;
+    border: 1px solid rgb(39, 39, 42);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .chatInputForm {
+    display: flex;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgb(39, 39, 42);
+    position: relative;
+    box-sizing: border-box;
+  }
+  
+  .chatInput {
+    flex: 1;
+    padding: 0.5rem 3rem 0.5rem 0.85rem; /* 오른쪽 여백을 2.5rem으로 설정해 전송 버튼이 침범하지 않도록 조정 */
+    border: none;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 14px;
+    resize: none;
+    overflow: hidden;
+    height: 40px;
+    line-height: 24px;
+    vertical-align: middle;
+    box-sizing: border-box;
+  }
+  
+  .chatInput:focus {
+    outline: none;
+  }
+  
+  .chatInput::placeholder {
+    color: #9ca3af;
+    font-size: 14px;
+  }
+  
+  .attachmentIcon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #9ca3af;
+    transition: color 0.3s ease;
+    transform: translateY(-50%);
+  }
+  
+  .attachmentIcon:hover {
+    color: #ffffff;
+  }
+  
+  .chatSubmit {
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    z-index: 2;
+  }
+  
+  .chatSubmit.inactive {
+    background-color: rgb(130, 130, 130);
+    color: #000000;
+    cursor: not-allowed;
+  }
+  
+  .chatSubmit.active {
+    background-color: rgb(250, 250, 250);
+    color: #000000;
+    cursor: pointer;
+  }
+  
+  .submitArrow {
+    font-size: 1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .chatSubmit.active:hover {
+    background-color: rgb(240, 240, 240);
+  }
+  
+  .lastModified {
+    font-size: 12px;
+    color: #a1a1aa;
+    text-align: center;
+    margin: 0;
+    margin-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .attachedFilePreview {
+    background-color: rgba(39, 39, 42, 0.5);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .fileInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .fileName {
+    font-size: 14px;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 30px);
+  }
+  
+  .removeFile {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+  }
+  
+  .removeFile:hover {
+    color: #ff4d4f;
+  }
+  
+  .dragOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .dragOverlay.active {
+    opacity: 1;
+  }
+  
+  .dragText {
+    color: rgb(161, 161, 170);
+    font-size: 18px;
+    font-weight: normal;
+    text-align: center;
+    animation: fadeInOut 2s ease-in-out infinite;
+  }
+  
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  .loadingMessage {
+    position: relative;
+    overflow: hidden;
+    height: auto; /* 고정 높이 대신 자동으로 조절되도록 변경 */
+    min-height: 24px; /* 최소 높이 설정 */
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem; /* 하단 여백 추가 */
+  }
+  
+  
+  .loadingMessageContent {
+    position: relative; /* absolute에서 relative로 변경 */
+    margin-top: 0.5rem;
+    width: 100%;
+    animation: 
+      slideUp 0.5s ease-out,
+      textColorPulse 1.5s infinite;
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes textColorPulse {
+    0%, 100% {
+      color: rgba(220, 221, 222, 0.5);
+    }
+    50% {
+      color: rgba(220, 221, 222, 1);
+    }
+  }
+  
+  .fadeIn {
+    animation: fadeInFromLeft 1s ease-out forwards;
+  }
+  
+  @keyframes fadeInFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .hidden {
+    opacity: 0;
+  }
+  
+  @media (max-width: 800px) {
+    .messageWrapper {
+      padding: 1rem 1rem 1rem 3rem;
+    }
+    
+    .messageInner {
+      width: 100%;
+    }
+    
+    .userIcon, .aiIcon {
+      left: 0.75rem;
+    }
+    
+    .inputContainer {
+      max-width: 100%;
+      border-radius: 0;
+    }
+  
+    .exampleContainer {
+      padding: 0.5rem 1rem;
+      max-width: 100%;
+    }
+    
+    .infoBoxContainer {
+      padding: 0.5rem 1rem;
+      max-width: 800px;
+      margin: 1rem auto 0;
+    }
+  }
+
+    .headerContent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .chatHeader .AIIcon {
+    width: 32px;
+    height: 32px;
+  }

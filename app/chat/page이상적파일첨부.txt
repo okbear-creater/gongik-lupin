@@ -1,0 +1,320 @@
+'use client'
+import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import styles from './chat.module.css';
+
+const UserIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const AIIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const AttachmentIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.44 11.05L12.25 20.24C11.12 21.37 9.61 22 8 22C6.39 22 4.88 21.37 3.75 20.24C2.62 19.11 2 17.6 2 16C2 14.4 2.63 12.89 3.76 11.76L13 2.55C13.73 1.82 14.73 1.42 15.77 1.42C16.81 1.42 17.81 1.82 18.54 2.55C19.27 3.28 19.67 4.28 19.67 5.32C19.67 6.36 19.27 7.36 18.54 8.09L9.31 17.3C8.94 17.67 8.44 17.88 7.92 17.88C7.4 17.88 6.9 17.67 6.53 17.3C6.16 16.93 5.95 16.43 5.95 15.91C5.95 15.39 6.16 14.89 6.53 14.52L15.72 5.33" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const ExampleButton = ({ category, example, onClick }) => (
+  <button className={styles.exampleButton} onClick={() => onClick(example)}>
+    <div className={styles.category}>{category}</div>
+    <div className={styles.example}>{example}</div>
+  </button>
+);
+
+const removeMetadata = (text) => {
+  return text.replace(/【.*?†source】/g, '');
+};
+
+export default function ChatPage() {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [showExamples, setShowExamples] = useState(true);
+  const [showInfoBox, setShowInfoBox] = useState(true);
+  const [attachedFile, setAttachedFile] = useState(null);
+  const [dragging, setDragging] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("관련 병역판정 기준을 살펴보고 있어요…");
+  const [loadingMessageKey, setLoadingMessageKey] = useState(0);
+  const dragCounter = useRef(0);
+  const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [messages]);
+
+  useEffect(() => {
+    let timer;
+    if (isLoading) {
+      timer = setTimeout(() => {
+        setLoadingMessage("찾았어요! 기준과 비교 분석하는 중이에요…");
+        setLoadingMessageKey(prev => prev + 1);
+      }, 3500); // 3.5초 후에 메시지 변경
+    }
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+    adjustTextareaHeight();
+  };
+
+  const adjustTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!input.trim() && !attachedFile) return;
+
+    let messageContent = input.trim();
+    if (attachedFile) {
+      messageContent += ` [첨부파일: ${attachedFile.name}]`;
+    }
+
+    setInput('');
+    setAttachedFile(null);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '40px';
+      textareaRef.current.focus();
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+
+    await sendMessage(messageContent);
+  };
+
+  const sendMessage = async (text) => {
+    const newUserMessage = { role: 'user', content: text };
+    setMessages(prevMessages => [...prevMessages, newUserMessage]);
+    setShowExamples(false);
+    setShowInfoBox(false);
+    setIsLoading(true);
+    setLoadingMessage("관련 병역판정 기준을 살펴보고 있어요…");
+    setLoadingMessageKey(prev => prev + 1);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: text }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API 요청 실패');
+      }
+
+      const data = await response.json();
+      const cleanedResponse = removeMetadata(data.response).trimStart();
+      setMessages(prevMessages => [...prevMessages, { role: 'assistant', content: cleanedResponse }]);
+    } catch (error) {
+      console.error('Error:', error);
+      setMessages(prevMessages => [...prevMessages, { role: 'assistant', content: '죄송합니다. 오류가 발생했습니다. 다시 시도해 주세요.' }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleExampleClick = (text) => {
+    sendMessage(text);
+  };
+
+  const handleAttachment = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAttachedFile(file);
+    }
+  };
+
+  const removeAttachedFile = () => {
+    setAttachedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current += 1;
+    if (dragCounter.current === 1) {
+      setDragging(true);
+    }
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current -= 1;
+    if (dragCounter.current === 0) {
+      setDragging(false);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current = 0;
+    setDragging(false);
+
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setAttachedFile(file);
+    }
+  };
+
+  return (
+    <div 
+      className={styles.chatContainer} 
+      onDragEnter={handleDragEnter} 
+      onDragOver={handleDragOver} 
+      onDragLeave={handleDragLeave} 
+      onDrop={handleDrop}
+    >
+      <div className={`${styles.dragOverlay} ${dragging ? styles.active : ''}`}>
+        <div className={styles.dragText}>분석에 활용할 자료를 넣어주세요</div>
+      </div>
+      <div className={styles.chatHeader}>
+        <h1 className={styles.chatTitle}>공익루팡AI</h1>
+      </div>
+      {showInfoBox && (
+        <div className={styles.infoBoxContainer}>
+          <div className={styles.infoBox}>
+            <h2 className={styles.infoBoxTitle}>공익루팡AI에 오신 것을 환영합니다!</h2>
+            <p className={styles.infoBoxContent}>
+              이 서비스는 병역판정 신체검사 기준을 바탕으로, 사용자가 입력한 증상과 건강 상태를 분석해 공익 판정 가능성을 예측해주는 맞춤형 AI 분석 도구입니다.<br /><br />
+              공익루팡AI는 최신 병역 기준 데이터를 활용하여 정확하고 신뢰성 있는 결과를 제공합니다. 사용자가 입력한 정보는 실시간으로 처리되며, AI 모델은 그에 따라 공익 판정 여부를 분석해줍니다.<br /><br />
+              병역 고민이 있으신가요? 공익루팡AI로 미리 확인해보세요!
+            </p>
+          </div>
+        </div>
+      )}
+      <div className={styles.chatMessages}>
+        {messages.map((message, index) => (
+          <div key={index} className={styles.messageWrapper} style={index === 0 ? {borderTop: 'none'} : {}}>
+            {message.role === 'user' ? (
+              <div className={styles.userIcon}>
+                <UserIcon />
+              </div>
+            ) : (
+              <div className={styles.aiIcon}>
+                <AIIcon />
+              </div>
+            )}
+            <div className={styles.messageInner}>
+              <div className={`${styles.message} ${styles[message.role]}`}>
+                <div className={`${styles.messageContent} ${message.role === 'assistant' ? styles.fadeIn : ''}`}>
+                  <ReactMarkdown>
+                    {message.content}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className={styles.messageWrapper} style={messages.length === 0 ? {borderTop: 'none'} : {}}>
+            <div className={styles.aiIcon}>
+              <AIIcon />
+            </div>
+            <div className={styles.messageInner}>
+              <div className={`${styles.message} ${styles.assistant}`}>
+                <div className={styles.loadingMessage}>
+                  <div key={loadingMessageKey} className={styles.loadingMessageContent}>
+                    {loadingMessage}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      {showExamples && (
+        <div className={styles.exampleContainer}>
+          <ExampleButton category="BMI지수" example="저는 170cm에 90kg에요" onClick={handleExampleClick} />
+          <ExampleButton category="시력" example="제 시력은 0.1/0.1이에요" onClick={handleExampleClick} />
+          <ExampleButton category="청력" example="50db 소리가 잘 안들려요" onClick={handleExampleClick} />
+          <ExampleButton category="혈압" example="수축기 150, 이완기 100이에요" onClick={handleExampleClick} />
+        </div>
+      )}
+      <div className={styles.inputWrapper}>
+        <div className={styles.inputContainer}>
+          {attachedFile && (
+            <div className={styles.attachedFilePreview}>
+              <div className={styles.fileInfo}>
+                <span className={styles.fileName}>{attachedFile.name}</span>
+                <button className={styles.removeFile} onClick={removeAttachedFile}>
+                  &times;
+                </button>
+              </div>
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className={styles.chatInputForm}>
+            <div className={styles.attachmentIcon} onClick={handleAttachment}>
+              <AttachmentIcon />
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+            />
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              placeholder="메시지를 입력하세요."
+              className={styles.chatInput}
+              rows={1}
+            />
+            <button 
+              type="submit" 
+              className={`${styles.chatSubmit} ${input.trim() || attachedFile ? styles.active : styles.inactive}`}
+              disabled={!input.trim() && !attachedFile}
+            >
+              <span className={styles.submitArrow}>&#8593;</span>
+            </button>
+          </form>
+          <div className={styles.lastModified}>본 서비스의 병역판정 기준은 2024년 8월 15일 업데이트된 검사규칙을 따릅니다.</div>
+        </div>
+      </div>
+    </div>
+  );
+}
