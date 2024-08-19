@@ -1,4 +1,4 @@
-.chatContainer {
+.lupaChatContainer {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -8,7 +8,7 @@
   color: #000000;
 }
 
-.chatHeader {
+.lupaChatHeader {
   padding: 0.5rem 1rem;
   background-color: rgb(255, 255, 255);
   border-bottom: 1px solid rgb(200, 200, 200);
@@ -17,22 +17,30 @@
   align-items: center;
 }
 
-.chatTitle {
+.lupaChatTitle {
   font-size: 14px;
   font-weight: bold;
   color: #333333;
   margin: 0;
 }
 
-.infoBoxContainer {
+.lupaInfoBoxContainer {
   padding: 1rem;
   width: 100%;
   max-width: 668px;
   margin: 1rem auto 0;
   box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
-.infoBox {
+.lupaInfoBoxContainer.lupaVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lupaInfoBox {
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(200, 200, 200);
   border-radius: 8px;
@@ -42,7 +50,7 @@
   box-sizing: border-box;
 }
 
-.infoBoxTitle {
+.lupaInfoBoxTitle {
   font-size: 18px;
   line-height: 28px;
   color: #333333;
@@ -50,20 +58,20 @@
   font-weight: normal;
 }
 
-.infoBoxContent {
+.lupaInfoBoxContent {
   font-size: 16px;
   line-height: 1.6;
   color: rgb(80, 80, 80);
   margin: 0;
 }
 
-.infoBoxContent br {
+.lupaInfoBoxContent br {
   content: "";
   display: block;
   margin-bottom: 0.5em;
 }
 
-.chatMessages {
+.lupaChatMessages {
   flex: 1;
   overflow-y: auto;
   padding: 0.5rem 0;
@@ -72,7 +80,7 @@
   align-items: center;
 }
 
-.messageWrapper {
+.lupaMessageWrapper {
   width: 100%;
   max-width: 660px;
   padding: 1rem 1rem;
@@ -81,16 +89,16 @@
   border-top: 1px solid rgb(200, 200, 200);
 }
 
-.messageWrapper:first-child {
+.lupaMessageWrapper:first-child {
   border-top: none;
 }
 
-.messageInner {
+.lupaMessageInner {
   width: 100%;
   max-width: 600px;
 }
 
-.message {
+.lupaMessage {
   line-height: 1.5;
   width: 100%;
   text-align: left;
@@ -98,42 +106,42 @@
   margin-bottom: 0.5rem;
 }
 
-.user {
+.lupaUser {
   color: #333333;
 }
 
-.assistant {
+.lupaAssistant {
   color: rgb(50, 50, 50);
 }
 
-.messageContent {
+.lupaMessageContent {
   word-wrap: break-word;
 }
 
-.messageContent h1, .messageContent h2, .messageContent h3 {
+.lupaMessageContent h1, .lupaMessageContent h2, .lupaMessageContent h3 {
   margin-top: 1em;
   margin-bottom: 0.5em;
 }
 
-.messageContent p {
+.lupaMessageContent p {
   margin-bottom: 1em;
 }
 
-.messageContent a {
+.lupaMessageContent a {
   color: #0000FF;
   text-decoration: underline;
 }
 
-.messageContent ul, .messageContent ol {
+.lupaMessageContent ul, .lupaMessageContent ol {
   margin-left: 1.5em;
   margin-bottom: 1em;
 }
 
-.messageContent li {
+.lupaMessageContent li {
   margin-bottom: 0.5em;
 }
 
-.userIcon, .aiIcon {
+.lupaUserIcon, .lupaAiIcon {
   position: absolute;
   left: -2rem;
   top: 1.9rem;
@@ -142,7 +150,7 @@
   transform-origin: center;
 }
 
-.exampleContainer {
+.lupaExampleContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.6rem;
@@ -153,7 +161,7 @@
   box-sizing: border-box;
 }
 
-.exampleButton {
+.lupaExampleButton {
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(200, 200, 200);
   border-radius: 8px;
@@ -162,35 +170,49 @@
   width: 100%;
   height: 80px;
   text-align: left;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  pointer-events: none;
 }
 
-.exampleButton:hover {
+.lupaExampleButton.lupaVisible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.lupaExampleButton.lupaVisible:hover {
   background-color: rgba(230, 230, 230, 0.5);
 }
 
-.category {
+.lupaExampleButton:not(.lupaVisible) {
+  pointer-events: none;
+}
+
+.lupaCategory {
   color: #333333;
   font-size: 14px;
   margin-bottom: 0.5rem;
 }
 
-.example {
+.lupaExample {
   color: rgb(80, 80, 80);
   font-size: 14px;
 }
 
-.inputWrapper {
+.lupaInputWrapper {
   background-color: rgb(245, 245, 245);
   padding: 0;
   margin-top: auto;
 }
 
-.inputContainer {
+.lupaInputContainer {
   background-color: rgb(255, 255, 255);
   padding: 1rem 1rem 0.75rem;
   border: 1px solid rgb(200, 200, 200);
@@ -200,7 +222,7 @@
   margin: 0 auto;
 }
 
-.chatInputForm {
+.lupaChatInputForm {
   display: flex;
   align-items: center;
   background-color: rgb(255, 255, 255);
@@ -212,9 +234,9 @@
   box-sizing: border-box;
 }
 
-.chatInput {
+.lupaChatInput {
   flex: 1;
-  padding: 0.5rem 3rem 0.5rem 0.85rem; /* 오른쪽 여백을 2.5rem으로 설정해 전송 버튼이 침범하지 않도록 조정 */
+  padding: 0.5rem 3rem 0.5rem 0.85rem;
   border: none;
   background-color: transparent;
   color: #000000;
@@ -227,16 +249,16 @@
   box-sizing: border-box;
 }
 
-.chatInput:focus {
+.lupaChatInput:focus {
   outline: none;
 }
 
-.chatInput::placeholder {
+.lupaChatInput::placeholder {
   color: #666666;
   font-size: 14px;
 }
 
-.attachmentIcon {
+.lupaAttachmentIcon {
   position: absolute;
   top: 50%;
   left: 1rem;
@@ -251,11 +273,11 @@
   transform: translateY(-50%);
 }
 
-.attachmentIcon:hover {
+.lupaAttachmentIcon:hover {
   color: #333333;
 }
 
-.chatSubmit {
+.lupaChatSubmit {
   border: none;
   cursor: pointer;
   padding: 0;
@@ -272,19 +294,19 @@
   z-index: 2;
 }
 
-.chatSubmit.inactive {
+.lupaChatSubmit.lupaInactive {
   background-color: rgb(220, 220, 220);
   color: #666666;
   cursor: not-allowed;
 }
 
-.chatSubmit.active {
-  background-color: rgb(50, 50, 50); /* 검은색 배경 */
+.lupaChatSubmit.lupaActive {
+  background-color: rgb(50, 50, 50);
   color: #ffffff;
   cursor: pointer;
 }
 
-.submitArrow {
+.lupaSubmitArrow {
   font-size: 1rem;
   line-height: 1;
   display: flex;
@@ -294,11 +316,11 @@
   height: 100%;
 }
 
-.chatSubmit.active:hover {
-  background-color: rgb(30, 30, 30); /* 더 어두운 검은색 배경 */
+.lupaChatSubmit.lupaActive:hover {
+  background-color: rgb(30, 30, 30);
 }
 
-.lastModified {
+.lupaLastModified {
   font-size: 12px;
   color: #666666;
   text-align: center;
@@ -307,20 +329,20 @@
   padding-bottom: 0.5rem;
 }
 
-.attachedFilePreview {
+.lupaAttachedFilePreview {
   background-color: rgba(230, 230, 230, 0.5);
   border-radius: 8px;
   padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
 }
 
-.fileInfo {
+.lupaFileInfo {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.fileName {
+.lupaFileName {
   font-size: 14px;
   color: #333333;
   white-space: nowrap;
@@ -329,7 +351,7 @@
   max-width: calc(100% - 30px);
 }
 
-.removeFile {
+.lupaRemoveFile {
   background: none;
   border: none;
   color: #333333;
@@ -339,11 +361,11 @@
   margin-left: 10px;
 }
 
-.removeFile:hover {
+.lupaRemoveFile:hover {
   color: #ff4d4f;
 }
 
-.dragOverlay {
+.lupaDragOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -360,42 +382,42 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-.dragOverlay.active {
+.lupaDragOverlay.lupaActive {
   opacity: 1;
 }
 
-.dragText {
+.lupaDragText {
   color: rgb(100, 100, 100);
   font-size: 18px;
   font-weight: normal;
   text-align: center;
-  animation: fadeInOut 2s ease-in-out infinite;
+  animation: lupaFadeInOut 2s ease-in-out infinite;
 }
 
-@keyframes fadeInOut {
+@keyframes lupaFadeInOut {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
 
-.loadingMessage {
+.lupaLoadingMessage {
   position: relative;
   overflow: hidden;
-  height: auto; /* 고정 높이 대신 자동으로 조절되도록 변경 */
-  min-height: 24px; /* 최소 높이 설정 */
+  height: auto;
+  min-height: 24px;
   margin-top: 0.5rem;
-  padding-bottom: 0.5rem; /* 하단 여백 추가 */
+  padding-bottom: 0.5rem;
 }
 
-.loadingMessageContent {
-  position: relative; /* absolute에서 relative로 변경 */
+.lupaLoadingMessageContent {
+  position: relative;
   margin-top: 0.5rem;
   width: 100%;
   animation: 
-    slideUp 0.5s ease-out,
-    textColorPulse 1.5s infinite;
+    lupaSlideUp 0.5s ease-out,
+    lupaTextColorPulse 1.5s infinite;
 }
 
-@keyframes slideUp {
+@keyframes lupaSlideUp {
   from {
     transform: translateY(20px);
     opacity: 0;
@@ -406,7 +428,7 @@
   }
 }
 
-@keyframes textColorPulse {
+@keyframes lupaTextColorPulse {
   0%, 100% {
     color: rgba(100, 100, 100, 0.5);
   }
@@ -415,11 +437,11 @@
   }
 }
 
-.fadeIn {
-  animation: fadeInFromLeft 1s ease-out forwards;
+.lupaFadeIn {
+  animation: lupaFadeInFromLeft 1s ease-out forwards;
 }
 
-@keyframes fadeInFromLeft {
+@keyframes lupaFadeInFromLeft {
   from {
     opacity: 0;
     transform: translateX(-20px);
@@ -430,52 +452,52 @@
   }
 }
 
-.hidden {
+.lupaHidden {
   opacity: 0;
 }
 
 @media (max-width: 800px) {
-  .messageWrapper {
+  .lupaMessageWrapper {
     padding: 1rem 1rem 1rem 3rem;
   }
   
-  .messageInner {
+  .lupaMessageInner {
     width: 100%;
   }
   
-  .userIcon, .aiIcon {
+  .lupaUserIcon, .lupaAiIcon {
     left: 0.75rem;
   }
   
-  .inputContainer {
+  .lupaInputContainer {
     max-width: 100%;
     border-radius: 0;
   }
 
-  .exampleContainer {
+  .lupaExampleContainer {
     padding: 0.5rem 1rem;
     max-width: 100%;
   }
   
-  .infoBoxContainer {
+  .lupaInfoBoxContainer {
     padding: 0.5rem 1rem;
     max-width: 800px;
     margin: 1rem auto 0;
   }
 }
 
-.headerContent {
+.lupaHeaderContent {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.chatHeader .AIIcon {
+.lupaChatHeader .lupaAIIcon {
   width: 32px;
   height: 32px;
 }
 
-.headerLink {
+.lupaHeaderLink {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
